@@ -14,7 +14,7 @@ services:
     image: "chronograf:latest"
     entrypoint: "chronograf --influxdb-url=http://influxdb:8086"
     ports:
-      - 8888:8888
+      - 8888
     depends_on:
       - influxdb
 
@@ -22,7 +22,7 @@ services:
   grafana:
     image: grafana/grafana
     ports:
-      - 80:3000
+      - 3000
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=secret
       - GF_PANELS_DISABLE_SANITIZE_HTML=true
