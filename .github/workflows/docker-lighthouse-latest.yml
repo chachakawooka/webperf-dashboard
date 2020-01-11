@@ -16,7 +16,7 @@ jobs:
       id: docker
       with:
         IMAGE_NAME: 'lighthouse'
-        TAG: 'latest'
+        TAG: 'just-a-test'
         DOCKERFILE_PATH: 'packages/lighthouse/Dockerfile'
         BUILD_CONTEXT: 'packages/lighthouse/'
       env:
