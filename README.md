@@ -50,7 +50,7 @@ open dashboard at `localhost`, user: `admin` pass: `secret`
 
 create env variables:
 
-example,
+example, 
 
 ```js
   CRON=0 */10 * * * *
