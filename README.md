@@ -53,8 +53,8 @@ create env variables:
 example,
 
 ```js
-  CRON="0 */10 * * * *",
-  URLS="https://reactjs.org https://vuejs.org https://angular.io"
+  CRON=0 */10 * * * *
+  URLS=https://reactjs.org https://vuejs.org https://angular.io
 ```
 
 > Set `report` if you want to save lighthouse report as html.
