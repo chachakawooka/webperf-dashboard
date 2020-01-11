@@ -1,8 +1,9 @@
-name: Publish Docker
+name: Publish Lighthouse Latest
 on: push
 jobs:
   build:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' # Running this job only for master branch
     steps:
 
     - name: Copy Repo Files
