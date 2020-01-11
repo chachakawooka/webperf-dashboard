@@ -40,7 +40,7 @@ services:
       - 3000:3000
     environment:
       - HOST=influxdb
-    volumes:
-      - ./config.json:/usr/src/webperf-dashboard-lighthouse/config.json
+      - URLS=${URLS}
+      - CRON=${CRON}
     depends_on:
       - influxdb
