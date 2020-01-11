@@ -10,9 +10,14 @@ import Logger from './logger';
 import { ICronConfig } from './types';
 import utils from './utils';
 
-const { cron, urls } = config as ICronConfig;
 const app = express();
 const console = new Logger('[App]: ');
+
+let urls=[]
+process.env.URLS.split(" ").forEach(function (item) {
+ urls.push({"url": item, "options": { "report": true } })
+});
+const cron = process.env.CRON;
 
 app.use(bodyParser.json());
 app.use('/hook', hook);

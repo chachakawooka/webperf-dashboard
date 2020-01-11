@@ -48,19 +48,13 @@ open dashboard at `localhost`, user: `admin` pass: `secret`
 
 ### Configuration
 
-In the root of the application there is a `config.json` file, which is propagated to `packages/lighthouse` during docker build step.
+create env variables:
 
 example,
 
 ```js
-{
-  "cron": "0 */10 * * * *",
-  "urls": [
-    { "url": "https://reactjs.org", "options": { "report": true } },
-    { "url": "https://vuejs.org", "options": { "report": true } },
-    { "url": "https://angular.io", "options": { "report": true } }
-  ]
-}
+  CRON="0 */10 * * * *",
+  URLS="https://reactjs.org https://vuejs.org https://angular.io"
 ```
 
 > Set `report` if you want to save lighthouse report as html.
