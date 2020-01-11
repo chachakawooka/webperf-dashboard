@@ -1,4 +1,4 @@
-name: Publish Docker
+name: Publish Lighthouse Latest
 on: push
 jobs:
   build:
