@@ -15,6 +15,8 @@ services:
       - influxdb-data:/var/lib/influxdb
   chronograf:
     image: "chronograf:latest"
+    networks:
+      - webperfnet 
     entrypoint: "chronograf --influxdb-url=http://influxdb:8086"
     depends_on:
       - influxdb
