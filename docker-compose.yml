@@ -35,6 +35,8 @@ services:
     networks:
       - proxy
       - webperfnet
+    volumes:
+      - grafana-data:/var/lib/grafana
     deploy:
       labels:
         - "traefik.http.services.webperf${NAME}.loadbalancer.server.port=3000"
