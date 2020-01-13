@@ -27,9 +27,6 @@ services:
     image: "chachakawooka/webperf_grafana"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=${GF_SECRET}
-      - GF_PANELS_DISABLE_SANITIZE_HTML=true
-      - GF_SERVER_SERVER_FROM_SUB_PATH=${GF_SERVER_SERVER_FROM_SUB_PATH}
-      - GF_SERVER_ROOT_URL=${GF_SERVER_ROOT_URL}
     depends_on:
       - influxdb
     networks:
@@ -62,10 +59,12 @@ services:
     deploy:
       labels:
         - "traefik.http.services.webperfl${NAME}.loadbalancer.server.port=3000"
-        - "traefik.http.routers.webperfl${NAME}.rule=HOST(`${DOMAIN}`) && Path(`/reports`)"
+        - "traefik.http.routers.webperfl${NAME}.rule=HOST(`${DOMAIN}`) && PathPrefix(`/viewer`)"
         - "traefik.enable=true"
         - "traefik.http.routers.webperfl${NAME}.entrypoints=web"
         - "traefik.docker.network=proxy"
+        - "traefik.http.middlewares.webperfl${NAME}-stripprefix.stripprefix.prefixes=/viewer"
+        - "traefik.http.routers.webperfl${NAME}.middlewares=webperfl${NAME}-stripprefix@docker"
 networks:
   webperfnet:
   proxy:
