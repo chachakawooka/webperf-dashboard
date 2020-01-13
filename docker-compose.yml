@@ -1,46 +1,48 @@
+volumes:
+  influxdb-data:
+
 version: "3"
 services:
   # DATABASE
   influxdb:
     image: "influxdb:latest"
-    ports:
-      - 8086
     environment:
       - INFLUXDB_ADMIN_USER=admin
-      - INFLUXDB_ADMIN_PASSWORD=admin
+      - INFLUXDB_ADMIN_PASSWORD=${GF_SECRET}
     volumes:
-      - ./packages/influxdb/volume:/var/lib/influxdb
+      - influxdb-data:/var/lib/influxdb
   chronograf:
     image: "chronograf:latest"
     entrypoint: "chronograf --influxdb-url=http://influxdb:8086"
-    ports:
-      - 8888
     depends_on:
       - influxdb
 
   # DASHBOARD
   grafana:
-    image: grafana/grafana
-    ports:
-      - 3000
+    image: "chachakawooka/webperf_grafana"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=secret
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECRET}
       - GF_PANELS_DISABLE_SANITIZE_HTML=true
-    volumes:
-      - "./packages/grafana/volume:/var/lib/grafana"
-      - "./packages/grafana/provisioning:/etc/grafana/provisioning"
-      - "./packages/grafana/grafana.ini:/etc/grafana/grafana.ini"
     depends_on:
       - influxdb
+    labels:
+      - "traefik.http.services.webperf.loadbalancer.server.port=3000"
+      - "traefik.http.routers.webperf.rule=PathPrefix(`/webperf/${NAME}`)"
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.middlewares.webperf-stripprefix.stripprefix.prefixes=/webperf/${NAME}"
+      - "traefik.http.routers.webperf.middlewares=webperf-stripprefix@docker"
 
   # lighthouse
   webperf-dashboard-lighthouse:
-    image: "felicegeracitano/webperf-dashboard-lighthouse:1.1.1"
-    ports:
-      - 3000
+    image: "chachakawooka/webperf_lighthouse"
     environment:
       - HOST=influxdb
       - URLS=${URLS}
       - CRON=${CRON}
     depends_on:
       - influxdb
+
+networks:
+  proxy:
+    external: true
