@@ -25,6 +25,8 @@ services:
       - GF_PANELS_DISABLE_SANITIZE_HTML=true
     depends_on:
       - influxdb
+    networks:
+      - proxy
     labels:
       - "traefik.http.services.webperf.loadbalancer.server.port=3000"
       - "traefik.http.routers.webperf.rule=PathPrefix(`/webperf/${NAME}`)"
