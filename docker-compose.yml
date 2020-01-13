@@ -1,5 +1,6 @@
 volumes:
   influxdb-data:
+  grafana-data:
 
 version: "3"
 services:
@@ -37,12 +38,10 @@ services:
     deploy:
       labels:
         - "traefik.http.services.webperf${NAME}.loadbalancer.server.port=3000"
-        - "traefik.http.routers.webperf${NAME}.rule=PathPrefix(`/webperf/${NAME}`)"
+        - "traefik.http.routers.webperf${NAME}.rule=HOST(`${DOMAIN}`)"
         - "traefik.enable=true"
         - "traefik.http.routers.webperf${NAME}.entrypoints=web"
         - "traefik.docker.network=proxy"
-        - "traefik.http.middlewares.webperf${NAME}-stripprefix.stripprefix.prefixes=/webperf/${NAME}"
-        - "traefik.http.routers.webperf${NAME}.middlewares=webperf${NAME}-stripprefix@docker"
     links:
       - influxdb
 
@@ -50,6 +49,7 @@ services:
   webperf-dashboard-lighthouse:
     image: "chachakawooka/webperf_lighthouse"
     networks:
+      - proxy
       - webperfnet 
     environment:
       - HOST=influxdb
@@ -57,7 +57,13 @@ services:
       - CRON=${CRON}
     depends_on:
       - influxdb
-
+    deploy:
+      labels:
+        - "traefik.http.services.webperfl${NAME}.loadbalancer.server.port=3000"
+        - "traefik.http.routers.webperfl${NAME}.rule=HOST(`${DOMAIN}`) && Path(`/reports`)"
+        - "traefik.enable=true"
+        - "traefik.http.routers.webperfl${NAME}.entrypoints=web"
+        - "traefik.docker.network=proxy"
 networks:
   webperfnet:
   proxy:
