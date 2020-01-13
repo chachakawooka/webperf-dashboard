@@ -6,6 +6,8 @@ services:
   # DATABASE
   influxdb:
     image: "influxdb:latest"
+    networks:
+      - webperfnet 
     environment:
       - INFLUXDB_ADMIN_USER=admin
       - INFLUXDB_ADMIN_PASSWORD=${GF_SECRET}
@@ -29,6 +31,7 @@ services:
       - influxdb
     networks:
       - proxy
+      - webperfnet
     deploy:
       labels:
         - "traefik.http.services.webperf${NAME}.loadbalancer.server.port=3000"
@@ -38,10 +41,14 @@ services:
         - "traefik.docker.network=proxy"
         - "traefik.http.middlewares.webperf${NAME}-stripprefix.stripprefix.prefixes=/webperf/${NAME}"
         - "traefik.http.routers.webperf${NAME}.middlewares=webperf${NAME}-stripprefix@docker"
+    links:
+      - influxdb
 
   # lighthouse
   webperf-dashboard-lighthouse:
     image: "chachakawooka/webperf_lighthouse"
+    networks:
+      - webperfnet 
     environment:
       - HOST=influxdb
       - URLS=${URLS}
@@ -50,5 +57,6 @@ services:
       - influxdb
 
 networks:
+  webperfnet:
   proxy:
     external: true
