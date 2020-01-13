@@ -29,13 +29,13 @@ services:
       - proxy
     deploy:
       labels:
-        - "traefik.http.services.webperf.loadbalancer.server.port=3000"
-        - "traefik.http.routers.webperf.rule=PathPrefix(`/webperf/${NAME}`)"
+        - "traefik.http.services.webperf${NAME}.loadbalancer.server.port=3000"
+        - "traefik.http.routers.webperf${NAME}.rule=PathPrefix(`/webperf/${NAME}`)"
         - "traefik.enable=true"
-        - "traefik.http.routers.helloworld.entrypoints=web"
+        - "traefik.http.routers.webperf${NAME}.entrypoints=web"
         - "traefik.docker.network=proxy"
-        - "traefik.http.middlewares.webperf-stripprefix.stripprefix.prefixes=/webperf/${NAME}"
-        - "traefik.http.routers.webperf.middlewares=webperf-stripprefix@docker"
+        - "traefik.http.middlewares.webperf${NAME}-stripprefix.stripprefix.prefixes=/webperf/${NAME}"
+        - "traefik.http.routers.webperf${NAME}.middlewares=webperf${NAME}-stripprefix@docker"
 
   # lighthouse
   webperf-dashboard-lighthouse:
