@@ -27,13 +27,15 @@ services:
       - influxdb
     networks:
       - proxy
-    labels:
-      - "traefik.http.services.webperf.loadbalancer.server.port=3000"
-      - "traefik.http.routers.webperf.rule=PathPrefix(`/webperf/${NAME}`)"
-      - "traefik.enable=true"
-      - "traefik.docker.network=proxy"
-      - "traefik.http.middlewares.webperf-stripprefix.stripprefix.prefixes=/webperf/${NAME}"
-      - "traefik.http.routers.webperf.middlewares=webperf-stripprefix@docker"
+    deploy:
+      labels:
+        - "traefik.http.services.webperf.loadbalancer.server.port=3000"
+        - "traefik.http.routers.webperf.rule=PathPrefix(`/webperf/${NAME}`)"
+        - "traefik.enable=true"
+        - "traefik.http.routers.helloworld.entrypoints=web"
+        - "traefik.docker.network=proxy"
+        - "traefik.http.middlewares.webperf-stripprefix.stripprefix.prefixes=/webperf/${NAME}"
+        - "traefik.http.routers.webperf.middlewares=webperf-stripprefix@docker"
 
   # lighthouse
   webperf-dashboard-lighthouse:
