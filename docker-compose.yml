@@ -23,6 +23,8 @@ services:
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=${GF_SECRET}
       - GF_PANELS_DISABLE_SANITIZE_HTML=true
+      - GF_SERVER_SERVER_FROM_SUB_PATH=${GF_SERVER_SERVER_FROM_SUB_PATH}
+      - GF_SERVER_ROOT_URL=${GF_SERVER_ROOT_URL}
     depends_on:
       - influxdb
     networks:
